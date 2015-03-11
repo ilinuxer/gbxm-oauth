@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+
+    <servlet>
+        <servlet-name>GoogleOAuthServlet</servlet-name>
+        <servlet-class>zx.soft.google.oauth.GoogleOAuthServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FacebookOAuthServlet</servlet-name>
+        <servlet-class>zx.soft.facebook.oauth.FacebookOAuthServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GoogleOAuthServlet</servlet-name>
+        <url-pattern>/googleoauth</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FacebookOAuthServlet</servlet-name>
+        <url-pattern>/facebookoauth</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+</web-app>
