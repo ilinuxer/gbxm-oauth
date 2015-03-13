@@ -23,10 +23,7 @@ var gplus={
             dataType:"text",
             success:function(data){
 
-                //alert(JSON.stringify(data));
-                //console.log(JSON.stringify(data))
-                //window.location.href(data);
-                window.open(data,"authorization","height=400,width=400");
+                window.open(data,"authorization","height=400,width=700");
                 $("#appName").empty();
                 $("#clientId").empty();
                 $("#clientSecret").empty();

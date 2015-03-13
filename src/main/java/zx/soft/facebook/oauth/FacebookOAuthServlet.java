@@ -4,7 +4,7 @@ import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import zx.soft.oauth.dao.FBDao;
+import zx.soft.oauth.dao.GbxmDao;
 import zx.soft.oauth.dao.common.DaoConfig;
 
 import javax.servlet.ServletException;
@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 public class FacebookOAuthServlet extends HttpServlet {
     private static Logger logger = LoggerFactory.getLogger(FacebookOAuthServlet.class);
-    private FBDao dao = new FBDao(DaoConfig.Servers.GBXM);
+    private GbxmDao dao = new GbxmDao(DaoConfig.Servers.GBXM);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String accessToken = request.getParameter("access_token");

@@ -13,6 +13,8 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.plus.PlusScopes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zx.soft.utils.threads.ApplyThreadPool;
 
 import java.io.File;
@@ -24,7 +26,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  * Created by jimbo on 15-3-11.
  */
-public class AuthorizationUrl {
+public class GplusAuthorizationUrl {
+    private static Logger logger = LoggerFactory.getLogger(GplusAuthorizationUrl.class);
 
     private static HttpTransport httpTransport;
 
@@ -77,20 +80,19 @@ public class AuthorizationUrl {
         @Override
         public void run() {
             try {
-                System.out.println("test THREAD");
                 String code = receiver.waitForCode();
                 TokenResponse response = flow.newTokenRequest(code).setRedirectUri(redirectUri1).execute();
                 Credential temp = flow.createAndStoreCredential(response, "user");
                 System.out.println(temp);
-                System.out.println("test ended");
             } catch (IOException e) {
-                System.out.println("test CThread error");
-                e.printStackTrace();
+                logger.error("认证过程出错");
+                throw new RuntimeException(e);
             } finally {
                 try {
                     receiver.stop();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("认证过程出错");
+                    throw new RuntimeException(e);
                 }
             }
         }

@@ -11,7 +11,7 @@ public class FBDaoDemo {
 
 
     public static void main(String[] args) {
-        FBDao dao = new FBDao(DaoConfig.Servers.GBXM);
+        GbxmDao dao = new GbxmDao(DaoConfig.Servers.GBXM);
 
         dao.insertFBToken("test",new Date());
     }

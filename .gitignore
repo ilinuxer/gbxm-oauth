@@ -1,7 +1,8 @@
 #文件夹
+/.idea/
 /target/
 #文件
 *.iml
 *.jar
 *.war
-
+.gitignore

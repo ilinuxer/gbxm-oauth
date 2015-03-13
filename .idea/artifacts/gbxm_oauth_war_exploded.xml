@@ -53,6 +53,7 @@
           <element id="library" level="project" name="Maven: org.mortbay.jetty:jetty-util:6.1.26" />
           <element id="library" level="project" name="Maven: org.mortbay.jetty:jetty:6.1.26" />
           <element id="library" level="project" name="Maven: org.mortbay.jetty:servlet-api:2.5-20081211" />
+          <element id="library" level="project" name="Maven: org.twitter4j:twitter4j-core:4.0.2" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="gbxm-oauth/web/Web" />
