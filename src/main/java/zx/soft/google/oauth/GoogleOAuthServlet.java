@@ -27,13 +27,8 @@ public class GoogleOAuthServlet extends HttpServlet {
         String appName = request.getParameter("appName");
         String clientId = request.getParameter("clientId");
         String clientSecret = request.getParameter("clientSecret");
-//        logger.info("appName"+"="+appName);
-//        logger.info("clientId"+"="+clientId);
-//        logger.info("clientSecret"+"="+clientSecret);
         String url= gplusAuthorizationUrl.getAuthorizationUrl(appName,clientId,clientSecret);
-        System.out.println(url);
         response.getWriter().println(url);
-
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

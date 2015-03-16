@@ -2,6 +2,7 @@ package zx.soft.google.oauth.code;
 
 import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.DataStoreCredentialRefreshListener;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.extensions.java6.auth.oauth2.VerificationCodeReceiver;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -34,7 +35,6 @@ public class GplusAuthorizationUrl {
     private ThreadPoolExecutor pool = ApplyThreadPool.getThreadPoolExector();
 
     public String getAuthorizationUrl(String appName, String clientId, String clientSecret) throws IOException {
-
         //授权参数准备
         File dataStoreDir = new File(System.getProperty("user.home"), ".gplus/credentials_" + appName);
         JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -44,16 +44,19 @@ public class GplusAuthorizationUrl {
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
         }
+
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport,
-                JSON_FACTORY, clientId, clientSecret, Collections.singleton(PlusScopes.PLUS_ME)).setDataStoreFactory(dataStoreFactory).build();
+                JSON_FACTORY, clientId, clientSecret, Collections.singleton(PlusScopes.PLUS_ME)).setDataStoreFactory(dataStoreFactory)
+                .addRefreshListener(new DataStoreCredentialRefreshListener("user", dataStoreFactory))
+                .setAccessType("offline").setApprovalPrompt("force").build();
 
         LocalServerReceiver.Builder builder = new LocalServerReceiver.Builder().setHost("localhost").setPort(8088);
 
         VerificationCodeReceiver receiver = builder.build();
 
-
         Credential credential = flow.loadCredential("user");
-        if (credential == null || credential.getRefreshToken() == null && credential.getExpiresInSeconds() <= 60L) {
+
+        if (credential == null || credential.getRefreshToken() == null && credential.getExpiresInSeconds().longValue() <= 60L) {
             String redirectUri1 = receiver.getRedirectUri();
             pool.execute(new ThreadOne(flow, receiver, redirectUri1));
             AuthorizationCodeRequestUrl authorizationUrl = flow.newAuthorizationUrl().setRedirectUri(redirectUri1);
@@ -63,7 +66,6 @@ public class GplusAuthorizationUrl {
         } else {
             return "authorized";
         }
-
     }
 
     public class ThreadOne implements Runnable {
@@ -81,9 +83,9 @@ public class GplusAuthorizationUrl {
         public void run() {
             try {
                 String code = receiver.waitForCode();
+                logger.error("返回码：：：" + code);
                 TokenResponse response = flow.newTokenRequest(code).setRedirectUri(redirectUri1).execute();
                 Credential temp = flow.createAndStoreCredential(response, "user");
-                System.out.println(temp);
             } catch (IOException e) {
                 logger.error("认证过程出错");
                 throw new RuntimeException(e);
@@ -97,5 +99,4 @@ public class GplusAuthorizationUrl {
             }
         }
     }
-
 }
