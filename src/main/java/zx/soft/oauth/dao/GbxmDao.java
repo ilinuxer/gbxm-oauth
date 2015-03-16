@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zx.soft.oauth.dao.common.DaoConfig;
 import zx.soft.oauth.dao.domain.FacebookToken;
+import zx.soft.oauth.dao.domain.GplusAPP;
+import zx.soft.oauth.dao.mapper.GbxmDaoMapper;
 
 import java.util.Date;
 
@@ -31,8 +33,15 @@ public class GbxmDao {
 
         try(SqlSession sqlSession = sqlSessionFactory.openSession();){
 
-            zx.soft.oauth.dao.mapper.GbxmDao gbxmDao = sqlSession.getMapper(zx.soft.oauth.dao.mapper.GbxmDao.class);
+            GbxmDaoMapper gbxmDao = sqlSession.getMapper(GbxmDaoMapper.class);
             gbxmDao.insertFBToken(new FacebookToken(accessToken,expiresAt));
+        }
+    }
+
+    public void insertGplusApp(String appName,String clientId,String clientSecret){
+        try(SqlSession sqlSession = sqlSessionFactory.openSession()){
+            GbxmDaoMapper gbxmDao = sqlSession.getMapper(GbxmDaoMapper.class);
+            gbxmDao.insertGplusApp(new GplusAPP(appName,clientId,clientSecret));
         }
     }
 
