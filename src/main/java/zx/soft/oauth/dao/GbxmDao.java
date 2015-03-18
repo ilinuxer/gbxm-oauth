@@ -22,7 +22,6 @@ public class GbxmDao {
     public GbxmDao(DaoConfig.Servers server) {
         try{
             sqlSessionFactory = DaoConfig.getSqlSessionFactory(server);
-
         }catch (RuntimeException e){
             logger.error("SpecoalQuery RuntimeException:" + e);
             throw new RuntimeException(e);
@@ -31,7 +30,7 @@ public class GbxmDao {
 
     public void insertFBToken(String accessToken,Date expiresAt){
 
-        try(SqlSession sqlSession = sqlSessionFactory.openSession();){
+        try(SqlSession sqlSession = sqlSessionFactory.openSession()){
 
             GbxmDaoMapper gbxmDao = sqlSession.getMapper(GbxmDaoMapper.class);
             gbxmDao.insertFBToken(new FacebookToken(accessToken,expiresAt));
@@ -46,7 +45,7 @@ public class GbxmDao {
     }
 
     public void insertTwitterToken(String accessToken,String tokenSecret){
-        try(SqlSession sqlSession = sqlSessionFactory.openSession();){
+        try(SqlSession sqlSession = sqlSessionFactory.openSession()){
 
         }
     }

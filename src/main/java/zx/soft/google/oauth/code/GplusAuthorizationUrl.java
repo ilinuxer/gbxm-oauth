@@ -20,8 +20,10 @@ import zx.soft.utils.threads.ApplyThreadPool;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
+import java.util.Properties;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -35,6 +37,18 @@ public class GplusAuthorizationUrl {
     private ThreadPoolExecutor pool = ApplyThreadPool.getThreadPoolExector();
 
     public String getAuthorizationUrl(String appName, String clientId, String clientSecret) throws IOException {
+
+        Properties redirectProp = new Properties();
+
+        try(InputStream inputStream = GplusAuthorizationUrl.class.getClassLoader().getResourceAsStream("gplus-oauth.properties")){
+            redirectProp.load(inputStream);
+        }catch (IOException e){
+            logger.error("加载 gplus-oauth.properties 文件的时候出错！");
+            throw new RuntimeException(e);
+        }
+
+        String redirectUrl = redirectProp.getProperty("gplus.redirecturl");
+        int redirectPort = Integer.parseInt(redirectProp.getProperty("gplus.redirectport"));
         //授权参数准备
         File dataStoreDir = new File(System.getProperty("user.home"), ".gplus/credentials_" + appName);
         JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -50,7 +64,7 @@ public class GplusAuthorizationUrl {
                 .addRefreshListener(new DataStoreCredentialRefreshListener("user", dataStoreFactory))
                 .setAccessType("offline").setApprovalPrompt("force").build();
 
-        LocalServerReceiver.Builder builder = new LocalServerReceiver.Builder().setHost("localhost").setPort(8088);
+        LocalServerReceiver.Builder builder = new LocalServerReceiver.Builder().setHost(redirectUrl).setPort(redirectPort);
 
         VerificationCodeReceiver receiver = builder.build();
 
