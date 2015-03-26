@@ -25,9 +25,10 @@ public class FacebookOAuthServlet extends HttpServlet {
         String userId = request.getParameter("user_id");
         String expiresIn = request.getParameter("expires_in");
 
-
+        logger.info(accessToken +"    "+expiresIn);
         FacebookClient.AccessToken newToken = new DefaultFacebookClient().obtainExtendedAccessToken("342572835951145", "ef8db461ff0067d0e83f8b8fe05ce736", accessToken);
         logger.info("get extend access token!");
+        logger.info(newToken.getAccessToken()+"   "+newToken.getExpires());
         dao.insertFBToken(newToken.getAccessToken(),newToken.getExpires());
 
     }
